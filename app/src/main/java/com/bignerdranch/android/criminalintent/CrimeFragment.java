@@ -8,7 +8,14 @@ package com.bignerdranch.android.criminalintent;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
+    import android.widget.Button;
+    import android.widget.CheckBox;
     import android.widget.EditText;
+
+    import java.text.DateFormat;
+    import java.text.FieldPosition;
+    import java.text.ParsePosition;
+    import java.util.Date;
 
 // A controller that interacts with model and view objects. Like you would with a traditional Activity.
 public class CrimeFragment extends Fragment {
@@ -18,6 +25,8 @@ public class CrimeFragment extends Fragment {
 
     // Widgets inside of this fragment
     private EditText mCrimeTitleField;
+    private Button mDateButton;
+    private CheckBox mSolvedCheckBox;
 
     // This method is called by the parent activity's FragmentManager
     @Override
@@ -28,15 +37,6 @@ public class CrimeFragment extends Fragment {
         mCrime = new Crime();
 
     }
-
-    // Nullable means that this method is permitted to return null. This is because fragments can
-    //   lack a UI.
-
-    // onCreateView is a method that expects a view that is created from the fragment xml layout.
-    // It is called by the hosting activity - it needs this view so it can be used to draw it in the Activity.
-    // It is public as opposed to protected because it needs to be called by the hosting activity.
-    // This is also where you wire up your widgets. This is because your widgets aren't even available in onCreate() -
-    //   they become available after the layout is inflated to become a view.
 
     // LayoutInflater is provided for you so you can inflate your layout
     @Nullable
@@ -50,7 +50,17 @@ public class CrimeFragment extends Fragment {
         //   In Activity.findViewById() it's a convenience method that calls View.findViewById behind the scenes.
         //   The Fragment class doesn't have a correponding convenience method, so you have to call the real thing.
         mCrimeTitleField = (EditText) fragmentView.findViewById(R.id.crime_title_field);
+        mDateButton = (Button) fragmentView.findViewById(R.id.crime_date_button);
+        mSolvedCheckBox = (CheckBox) fragmentView.findViewById(R.id.crime_solved_checkbox);
 
+        // Set properties
+
+        // Create a medium DateFormat formatter
+        DateFormat mediumDF = DateFormat.getDateInstance(DateFormat.MEDIUM);
+
+        // Use it to format the date and set the text of the button and disable it for now
+        mDateButton.setText(mediumDF.format(mCrime.getDate()));
+        mDateButton.setEnabled(false);
 
         // Add listeners
         mCrimeTitleField.addTextChangedListener(new TextWatcher() {
@@ -71,11 +81,18 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-
-
         return fragmentView;
     }
 }
+
+// Nullable means that this method is permitted to return null. This is because fragments can
+//   lack a UI.
+
+// onCreateView is a method that expects a view that is created from the fragment xml layout.
+// It is called by the hosting activity - it needs this view so it can be used to draw it in the Activity.
+// It is public as opposed to protected because it needs to be called by the hosting activity.
+// This is also where you wire up your widgets. This is because your widgets aren't even available in onCreate() -
+//   they become available after the layout is inflated to become a view.
 
 // You don't inflate  the fragment's view in onCreate().
 
