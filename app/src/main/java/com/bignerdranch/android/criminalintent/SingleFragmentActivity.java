@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
  */
 public abstract class SingleFragmentActivity extends FragmentActivity {
 
+    // Used to instantiate the Fragment.
     protected abstract Fragment createFragment();
 
     @Override

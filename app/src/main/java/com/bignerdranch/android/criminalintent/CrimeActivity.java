@@ -6,48 +6,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 // Support version of an Activity that hosts a Fragment - FragmentActivity
-public class CrimeActivity extends FragmentActivity {
+public class CrimeActivity extends SingleFragmentActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_activity);
-
-        // Get a handle to the fragment manager of this activity
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        // Try to get a fragment within the fragmentManager that has the same id of fragment_container
-
-        // Remember, fragments are identified using the container they are in. If you add multiple fragments,
-        //   you would create multiple separate containers for each fragment, each with a unique ID.
-        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
-
-        // If there wasn't a fragment there
-
-        //   A fragment could be there already - onCreate is called whenever the activity is re-created
-        //      but the FragmentManager automatically saves out its list of fragments. When the activity
-        //      is re-created, the new FragmentManager retrieves the list and re-creates the listed
-        //      fragments to make everything as it was before.
-        if (fragment == null) {
-
-            // Create a brand new CrimeFragment
-            fragment = new CrimeFragment();
-
-            // Begin a transaction with the fragment manager
-            fragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, fragment)         // Add the new fragment in the specified container with the container view ID
-                    .commit();                                      // Commit the change
-        }
-
-        // The FragmentManager identifies its fragments by the resource ID of its containers.
-
-        // There are two reasons why you pass in the resource ID of the fragment container:
-        // 1) Tells where the Fragment should appear
-        // 2) Is used as a unique identifier for the fragment in the FragmentManager's list.
-
-        // Notice
+    protected Fragment createFragment() {
+        return new CrimeFragment();
     }
-
 
 }
 
