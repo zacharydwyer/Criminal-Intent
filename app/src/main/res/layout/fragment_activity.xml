@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- crime_activity consists solely of a container view for a single fragment at the moment. -->
+<!-- fragment_activity consists solely of a container view for a single fragment at the moment. -->
 <!-- You will write code that puts a fragment's view inside this FrameLayout. -->
+
+<!-- Since this layout is so generic (it's literally just a single box) you could use it for any Activity
+     that only hosts a single, full-screen fragment. -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_container"

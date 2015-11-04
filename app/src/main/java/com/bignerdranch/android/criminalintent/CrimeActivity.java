@@ -11,7 +11,7 @@ public class CrimeActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.crime_activity);
+        setContentView(R.layout.fragment_activity);
 
         // Get a handle to the fragment manager of this activity
         FragmentManager fragmentManager = getSupportFragmentManager();
