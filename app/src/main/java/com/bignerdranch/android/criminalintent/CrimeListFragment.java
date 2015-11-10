@@ -9,7 +9,9 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -58,17 +60,45 @@ public class CrimeListFragment extends Fragment{
     }
 
     /* INNER CLASSES THAT SUPPORT THE RECYCLERVIEW */
-    private class CrimeViewHolder extends RecyclerView.ViewHolder {
+    private class CrimeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        // Assigned when data (a Crime) is bound to this ViewHolder from bindCrime. Used by onClick to show a toast with the crime's name.
+        private Crime mCrime;
 
         // Widgets inside of this ViewHolder
-        public TextView mTitleTextView;
+        private TextView mTitleTextView;
+        private TextView mDateTextView;
+        private CheckBox mSolvedCheckBox;
 
-        // Create a viewHolder. Expects to be given a TextView to work with.
+        // Called by CrimeAdapter's onCreateViewHolder method.
         public CrimeViewHolder(View itemView) {
             super(itemView);
 
-            // Expects the itemView to be a textView.
-            mTitleTextView = (TextView) itemView;
+            // Set the onClickListener for the view, which is built by the CrimeViewHolder, to this - I have implemented View.OnClickListener so I'm using myself.
+            itemView.setOnClickListener(this);
+
+            // Wire up the widgets
+            mTitleTextView = (TextView) itemView.findViewById(R.id.crime_list_item_title_text_view);
+            mDateTextView = (TextView) itemView.findViewById(R.id.crime_list_item_date_text_view);
+            mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.crime_list_item_solved_check_box);
+
+            // This is why ViewHolders are great - calls to findViewById() are expensive. Since onCreateViewHolder
+            // is called only 12 or so times in a run to actually create the widgets, onBindViewHolder is called
+            // way more times but it only assigns text/other data to these already-created and searched for
+            // widgets. So you don't have to create a new widget, just re-use the old one.
+        }
+
+        // What happens when this ViewHolder is clicked on? (gets mCrime, which is assigned in bindCrime)
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(getActivity(), mCrime.getTitle() + " clicked.", Toast.LENGTH_SHORT).show();
+        }
+
+        public void bindCrime(Crime crime) {
+            mCrime = crime;             // Assign the gotten crime to this ViewHolder's crime. WHY THO? WHY NOT JUST USE "crime"?
+            mTitleTextView.setText(mCrime.getTitle());
+            mDateTextView.setText(mCrime.getDate().toString());
+            mSolvedCheckBox.setChecked(mCrime.isSolved());
         }
     }
 
@@ -88,10 +118,11 @@ public class CrimeListFragment extends Fragment{
             // Get the layout inflater from the activity
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
 
-            // Build a view using a baked-in layout from the Android library
-            View view = layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            // Build a view using the layout you defined, give it the parent for the layout params, and don't actually add it to the parent.
+            // !! THIS IS THE ITEMVIEW THAT CRIMEVIEWHOLDER RECEIVES!
+            View view = layoutInflater.inflate(R.layout.crime_list_item, parent, false);
 
-            // Create a new ViewHolder using the View you just built.
+            // Create a new ViewHolder using the View you just built. CrimeViewHolder will wire up the widgets.
             return new CrimeViewHolder(view);
         }
 
@@ -102,8 +133,8 @@ public class CrimeListFragment extends Fragment{
             // Get the crime at the current position
             Crime crime = mCrimes.get(position);
 
-            // Set the text of the CrimeHolder's text view to the title of the crime
-            holder.mTitleTextView.setText(crime.getTitle());
+            // Bind the given ViewHolder's data using the crime we just got
+            holder.bindCrime(crime);
         }
 
         @Override
