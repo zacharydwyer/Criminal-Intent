@@ -16,6 +16,7 @@ package com.bignerdranch.android.criminalintent;
     import java.text.FieldPosition;
     import java.text.ParsePosition;
     import java.util.Date;
+    import java.util.UUID;
 
 // A controller that interacts with model and view objects. Like you would with a traditional Activity.
 public class CrimeFragment extends Fragment {
@@ -33,8 +34,9 @@ public class CrimeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // This fragment was just created. Create a new corresponding Crime object to go with it
-        mCrime = new Crime();
+        // We now need to know the parent Activity's intent's UUID extra to assign the new crime
+        // However, now it expects that the parent activity will definitely have an extra given to it named EXTRA_CRIME_ID
+        UUID crimeID = (UUID) getActivity().getIntent().getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
 
     }
 
@@ -48,7 +50,7 @@ public class CrimeFragment extends Fragment {
 
         // Add handle to widgets - just like in Activity.onCreate() but now you call View.findViewById.
         //   In Activity.findViewById() it's a convenience method that calls View.findViewById behind the scenes.
-        //   The Fragment class doesn't have a correponding convenience method, so you have to call the real thing.
+        //   The Fragment class doesn't have a corresponding convenience method, so you have to call the real thing.
         mCrimeTitleField = (EditText) fragmentView.findViewById(R.id.crime_title_field);
         mDateButton = (Button) fragmentView.findViewById(R.id.crime_date_button);
         mSolvedCheckBox = (CheckBox) fragmentView.findViewById(R.id.crime_solved_checkbox);

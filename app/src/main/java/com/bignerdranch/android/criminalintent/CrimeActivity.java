@@ -1,16 +1,28 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+import java.util.UUID;
+
 // Support version of an Activity that hosts a Fragment - FragmentActivity
 public class CrimeActivity extends SingleFragmentActivity {
+
+    public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id";
 
     @Override
     protected Fragment createFragment() {
         return new CrimeFragment();
+    }
+
+    public static Intent newIntent(Context packageContext, UUID crimeID) {
+        Intent intent = new Intent(packageContext, CrimeActivity.class);
+        intent.putExtra(EXTRA_CRIME_ID, crimeID);
+        return intent;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -91,7 +92,9 @@ public class CrimeListFragment extends Fragment{
         // What happens when this ViewHolder is clicked on? (gets mCrime, which is assigned in bindCrime)
         @Override
         public void onClick(View v) {
-            Toast.makeText(getActivity(), mCrime.getTitle() + " clicked.", Toast.LENGTH_SHORT).show();
+            // Intent intent = new Intent(getActivity(), CrimeActivity.class); - no longer using this since CrimeActivity now has a newIntent method
+            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            startActivity(intent);
         }
 
         public void bindCrime(Crime crime) {
