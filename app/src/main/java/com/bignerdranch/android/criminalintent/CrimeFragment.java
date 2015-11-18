@@ -21,6 +21,9 @@ package com.bignerdranch.android.criminalintent;
 // A controller that interacts with model and view objects. Like you would with a traditional Activity.
 public class CrimeFragment extends Fragment {
 
+    // Bundle key
+    private static final String ARG_CRIME_ID = "crime_id";
+
     // Each CrimeFragment has an associated crime.
     private Crime mCrime;
 
@@ -29,15 +32,41 @@ public class CrimeFragment extends Fragment {
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
 
+    // Used to create a new CrimeFragment. Should be called every time by CrimeActivity when it wants to create a Fragment.
+    public static CrimeFragment newInstance(UUID crimeID) {
+        Bundle argumentsBundle = new Bundle();
+
+        argumentsBundle.putSerializable(ARG_CRIME_ID, crimeID);
+
+        CrimeFragment fragment = new CrimeFragment();
+
+        fragment.setArguments(argumentsBundle);
+
+        return  fragment;
+    }
+
     // This method is called by the parent activity's FragmentManager
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // We now need to know the parent Activity's intent's UUID extra to assign the new crime
-        // However, now it expects that the parent activity will definitely have an extra given to it named EXTRA_CRIME_ID
-        UUID crimeID = (UUID) getActivity().getIntent().getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
+        // Get the Crime ID that created our parent activity (which created us).
+        // Retrieve it from the parent activity's Intent that was used to start it.
+        // UUID crimeID = (UUID) getActivity().getIntent().getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
 
+        // Retrieve the singleton CrimeLab we have. It needs context (the activity) for some reason.
+        // CrimeLab retrievedCrimeLab = CrimeLab.get(getActivity());
+
+        // Set this Fragment's crime to the CrimeLab's crime that has the ID we just got.
+        // mCrime = retrievedCrimeLab.getCrime(crimeID);
+
+        // ABOVE CODE IS NO LONGER NEEDED //
+
+        // Get the crimeID from the arguments bundle
+        UUID crimeID = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+
+        // Assign a crime from the crime lab (a singleton - to get it, use "get") to this fragment depending on the ID - again, it needs context, for some reason
+        mCrime = CrimeLab.get(getActivity()).getCrime(crimeID);
     }
 
     // LayoutInflater is provided for you so you can inflate your layout
@@ -56,6 +85,8 @@ public class CrimeFragment extends Fragment {
         mSolvedCheckBox = (CheckBox) fragmentView.findViewById(R.id.crime_solved_checkbox);
 
         // Set properties
+        mCrimeTitleField.setText(mCrime.getTitle());    // mCrime is assigned from onCreate
+        mSolvedCheckBox.setChecked(mCrime.isSolved());
 
         // Create a medium DateFormat formatter
         DateFormat mediumDF = DateFormat.getDateInstance(DateFormat.MEDIUM);
@@ -97,6 +128,8 @@ public class CrimeFragment extends Fragment {
 //   they become available after the layout is inflated to become a view.
 
 // You don't inflate  the fragment's view in onCreate().
+
+// To attach an arguments bundle, you create the fragment, add the bundle, and then add it to the activity. Using Fragment.setArguments(Bundle)
 
 /*
 onCreate()

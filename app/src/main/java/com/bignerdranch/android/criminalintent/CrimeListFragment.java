@@ -44,6 +44,13 @@ public class CrimeListFragment extends Fragment{
         return view;
     }
 
+    // OnResume is the safest place to update a fragment's view
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
     // This will later on be more complex.
     private void updateUI() {
 
@@ -53,11 +60,21 @@ public class CrimeListFragment extends Fragment{
         // Get the crimes from that CrimeLab.
         List<Crime> crimes = crimeLab.getCrimes();
 
-        // Create a new adapter that handles the crimes List. CrimeAdapter is only equipped to handle List<Crime>
-        mAdapter = new CrimeAdapter(crimes);
+        // Now, we need to know if the Adapter was already created (this method could be called by onResume() )
+        if (mAdapter == null) {
+            // Create a new adapter that handles the crimes List. CrimeAdapter is only equipped to handle List<Crime>
+            mAdapter = new CrimeAdapter(crimes);
 
-        // Give the RecyclerView this adapter
-        mCrimeRecyclerView.setAdapter(mAdapter);
+            // Give the RecyclerView this adapter
+            mCrimeRecyclerView.setAdapter(mAdapter);
+        } else {
+            // Forces te adapter to reload all of the items that are currently visible
+            // Wildly inefficient since, at most, only one Crime will have changed when returning to this Fragment.
+            // Should use notifyItemChanged instead, but how to get the item that changed?
+            mAdapter.notifyDataSetChanged();
+        }
+
+
     }
 
     /* INNER CLASSES THAT SUPPORT THE RECYCLERVIEW */

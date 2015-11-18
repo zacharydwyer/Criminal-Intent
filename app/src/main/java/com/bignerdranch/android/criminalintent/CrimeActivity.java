@@ -12,11 +12,17 @@ import java.util.UUID;
 // Support version of an Activity that hosts a Fragment - FragmentActivity
 public class CrimeActivity extends SingleFragmentActivity {
 
-    public static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id";
+    private static final String EXTRA_CRIME_ID = "com.bignerdranch.android.criminalintent.crime_id";
 
     @Override
     protected Fragment createFragment() {
-        return new CrimeFragment();
+        // return new CrimeFragment(); -- We no longer are just creating any old fragment, CrimeFragment needs info before it is created.
+
+        // Retrieve the CrimeID from the Intent that started me
+        UUID crimeID = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
+
+        // Return a new CrimeFragment that was created using its newInstance method
+        return CrimeFragment.newInstance(crimeID);
     }
 
     public static Intent newIntent(Context packageContext, UUID crimeID) {
