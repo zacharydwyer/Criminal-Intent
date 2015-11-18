@@ -44,7 +44,10 @@ public class CrimeListFragment extends Fragment{
         return view;
     }
 
-    // OnResume is the safest place to update a fragment's view
+    // OnResume is the safest place to update a fragment's view.
+
+    // According to SO:
+    // A Fragment's onResume() or onPause() will be called only when the Activities onResume() or onPause() is called. They are tightly coupled to the Activity.
     @Override
     public void onResume() {
         super.onResume();
@@ -73,8 +76,6 @@ public class CrimeListFragment extends Fragment{
             // Should use notifyItemChanged instead, but how to get the item that changed?
             mAdapter.notifyDataSetChanged();
         }
-
-
     }
 
     /* INNER CLASSES THAT SUPPORT THE RECYCLERVIEW */
